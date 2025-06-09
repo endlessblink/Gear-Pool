@@ -8,7 +8,7 @@ import EquipmentCard from "@/components/EquipmentCard";
 import EquipmentFilters from "@/components/EquipmentFilters";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-// Mock data for equipment
+// Mock data for equipment with Hebrew descriptions
 const mockEquipment = [
   {
     id: "1",
@@ -21,7 +21,7 @@ const mockEquipment = [
       videoCapability: "8K RAW",
       mount: "RF Mount"
     },
-    description: "Professional mirrorless camera with 8K video capability"
+    description: "מצלמה מירורלס מקצועית עם יכולת וידאו 8K"
   },
   {
     id: "2",
@@ -34,7 +34,7 @@ const mockEquipment = [
       recording: "4K 120fps",
       mount: "E Mount"
     },
-    description: "Cinema camera optimized for content creation"
+    description: "מצלמת קולנוע מותאמת ליצירת תוכן"
   },
   {
     id: "3",
@@ -47,7 +47,7 @@ const mockEquipment = [
       focal: "24-70mm",
       mount: "EF Mount"
     },
-    description: "Professional zoom lens for versatile shooting"
+    description: "עדשת זום מקצועית לצילום מגוון"
   },
   {
     id: "4",
@@ -60,7 +60,7 @@ const mockEquipment = [
       power: "Battery/Phantom",
       connection: "3.5mm/XLR"
     },
-    description: "Professional on-camera microphone"
+    description: "מיקרופון מקצועי למצלמה"
   },
   {
     id: "5",
@@ -73,7 +73,7 @@ const mockEquipment = [
       load: "8kg",
       material: "Carbon Fiber"
     },
-    description: "Professional carbon fiber tripod system"
+    description: "מערכת חצובה מקצועית מסיבי פחמן"
   },
   {
     id: "6",
@@ -86,7 +86,7 @@ const mockEquipment = [
       cri: "96+",
       control: "Wireless"
     },
-    description: "Professional LED light with wireless control"
+    description: "תאורת LED מקצועית עם שליטה אלחוטית"
   }
 ];
 
@@ -108,50 +108,74 @@ const Equipment = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  const getCategoryName = (category: string) => {
+    const categoryMap: Record<string, string> = {
+      all: "כל הקטגוריות",
+      Cameras: "מצלמות",
+      Lenses: "עדשות",
+      Audio: "אודיו",
+      Lighting: "תאורה",
+      Support: "חצובות ותמיכה"
+    };
+    return categoryMap[category] || category;
+  };
+
+  const getStatusName = (status: string) => {
+    const statusMap: Record<string, string> = {
+      all: "כל הסטטוסים",
+      available: "זמין",
+      "checked-out": "מושאל",
+      maintenance: "תחזוקה"
+    };
+    return statusMap[status] || status;
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Equipment Catalog</h1>
-        <p className="text-muted-foreground">
-          Browse and reserve professional equipment for your projects
+      <div className="mb-10">
+        <h1 className="text-4xl font-bold text-foreground mb-3">קטלוג ציוד</h1>
+        <p className="text-muted-foreground text-lg">
+          עיין והזמן ציוד מקצועי לפרויקטים שלך
         </p>
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-6 space-y-4">
+      <div className="mb-8 space-y-6">
         <div className="flex gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             <Input
-              placeholder="Search equipment..."
+              placeholder="חיפוש ציוד..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pr-12 rounded-full border-2 h-12 text-lg"
             />
           </div>
           <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="md:hidden">
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
+              <Button variant="outline" className="md:hidden rounded-full px-6">
+                <Filter className="h-5 w-5 ml-2" />
+                פילטרים
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <EquipmentFilters
-                categories={categories}
-                statuses={statuses}
-                selectedCategory={selectedCategory}
-                selectedStatus={selectedStatus}
-                onCategoryChange={setSelectedCategory}
-                onStatusChange={setSelectedStatus}
-              />
+            <SheetContent side="left">
+              <div className="mt-8">
+                <EquipmentFilters
+                  categories={categories}
+                  statuses={statuses}
+                  selectedCategory={selectedCategory}
+                  selectedStatus={selectedStatus}
+                  onCategoryChange={setSelectedCategory}
+                  onStatusChange={setSelectedStatus}
+                />
+              </div>
             </SheetContent>
           </Sheet>
         </div>
 
         {/* Desktop Filters */}
-        <div className="hidden md:block">
+        <div className="hidden md:block glass-effect rounded-2xl p-6">
           <EquipmentFilters
             categories={categories}
             statuses={statuses}
@@ -163,30 +187,38 @@ const Equipment = () => {
         </div>
 
         {/* Active Filters */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {selectedCategory !== "all" && (
-            <Badge variant="secondary" className="cursor-pointer" onClick={() => setSelectedCategory("all")}>
-              Category: {selectedCategory} ×
+            <Badge 
+              variant="secondary" 
+              className="cursor-pointer rounded-full px-4 py-2 hover:bg-secondary/80 smooth-transition" 
+              onClick={() => setSelectedCategory("all")}
+            >
+              קטגוריה: {getCategoryName(selectedCategory)} ×
             </Badge>
           )}
           {selectedStatus !== "all" && (
-            <Badge variant="secondary" className="cursor-pointer" onClick={() => setSelectedStatus("all")}>
-              Status: {selectedStatus} ×
+            <Badge 
+              variant="secondary" 
+              className="cursor-pointer rounded-full px-4 py-2 hover:bg-secondary/80 smooth-transition" 
+              onClick={() => setSelectedStatus("all")}
+            >
+              סטטוס: {getStatusName(selectedStatus)} ×
             </Badge>
           )}
         </div>
       </div>
 
       {/* Equipment Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredEquipment.map((equipment) => (
           <EquipmentCard key={equipment.id} equipment={equipment} />
         ))}
       </div>
 
       {filteredEquipment.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg">No equipment found matching your criteria.</p>
+        <div className="text-center py-20">
+          <p className="text-muted-foreground text-xl mb-6">לא נמצא ציוד המתאים לקריטריונים שלך.</p>
           <Button
             variant="outline"
             onClick={() => {
@@ -194,9 +226,9 @@ const Equipment = () => {
               setSelectedCategory("all");
               setSelectedStatus("all");
             }}
-            className="mt-4"
+            className="rounded-full px-8 py-3"
           >
-            Clear all filters
+            נקה את כל הפילטרים
           </Button>
         </div>
       )}

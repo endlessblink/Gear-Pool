@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 interface EquipmentFiltersProps {
   categories: string[];
@@ -11,6 +10,22 @@ interface EquipmentFiltersProps {
   onStatusChange: (status: string) => void;
 }
 
+const categoryNames: Record<string, string> = {
+  "all": "הכל",
+  "Cameras": "מצלמות",
+  "Lenses": "עדשות",
+  "Audio": "אודיו",
+  "Lighting": "תאורה",
+  "Support": "תמיכה"
+};
+
+const statusNames: Record<string, string> = {
+  "all": "כל הסטטוסים",
+  "available": "זמין",
+  "checked-out": "מושאל",
+  "maintenance": "תחזוקה"
+};
+
 const EquipmentFilters = ({
   categories,
   statuses,
@@ -20,36 +35,40 @@ const EquipmentFilters = ({
   onStatusChange,
 }: EquipmentFiltersProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="font-semibold mb-3">Categories</h3>
-        <div className="flex flex-wrap gap-2">
+        <h3 className="font-semibold text-lg mb-4 text-gray-900">קטגוריות</h3>
+        <div className="flex flex-wrap gap-3">
           {categories.map((category) => (
             <Button
               key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
+              variant="ghost"
               size="sm"
               onClick={() => onCategoryChange(category)}
-              className="capitalize"
+              className={`filter-button ${
+                selectedCategory === category ? "active" : ""
+              }`}
             >
-              {category === "all" ? "All Categories" : category}
+              {categoryNames[category] || category}
             </Button>
           ))}
         </div>
       </div>
 
       <div>
-        <h3 className="font-semibold mb-3">Status</h3>
-        <div className="flex flex-wrap gap-2">
+        <h3 className="font-semibold text-lg mb-4 text-gray-900">סטטוס</h3>
+        <div className="flex flex-wrap gap-3">
           {statuses.map((status) => (
             <Button
               key={status}
-              variant={selectedStatus === status ? "default" : "outline"}
+              variant="ghost"
               size="sm"
               onClick={() => onStatusChange(status)}
-              className="capitalize"
+              className={`filter-button ${
+                selectedStatus === status ? "active" : ""
+              }`}
             >
-              {status === "all" ? "All Status" : status.replace("-", " ")}
+              {statusNames[status] || status}
             </Button>
           ))}
         </div>
